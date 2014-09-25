@@ -317,76 +317,7 @@ namespace MapExplorer
             MyMap.Layers.Clear();
             NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
-
-        /// <summary>
-        /// Event handler for pitch slider value change.
-        /// </summary>
-        private void PitchValueChanged(object sender, EventArgs e)
-        {
-            if (PitchSlider != null)
-            {
-                MyMap.Pitch = PitchSlider.Value;
-            }
-        }
-
-        /// <summary>
-        /// Event handler for heading slider value change.
-        /// </summary>
-        private void HeadingValueChanged(object sender, EventArgs e)
-        {
-            if (HeadingSlider != null)
-            {
-                double value = HeadingSlider.Value;
-                if (value > 360) value -= 360;
-                MyMap.Heading = value;
-            }
-        }
-
-        /// <summary>
-        /// Event handler for clicking cartographic mode buttons.
-        /// </summary>
-        private void CartographicModeButton_Click(object sender, EventArgs e)
-        {
-            RoadButton.IsEnabled = true;
-            AerialButton.IsEnabled = true;
-            HybridButton.IsEnabled = true;
-            TerrainButton.IsEnabled = true;
-            AppBarColorModeMenuItem.IsEnabled = false;
-
-            if (sender == RoadButton)
-            {
-                AppBarColorModeMenuItem.IsEnabled = true;
-                // To change color mode back to dark
-                if (_isTemporarilyLight)
-                {
-                    _isTemporarilyLight = false;
-                    MyMap.ColorMode = MapColorMode.Dark;
-                }
-                MyMap.CartographicMode = MapCartographicMode.Road;
-                RoadButton.IsEnabled = false;
-            }
-            else if (sender == AerialButton)
-            {
-                MyMap.CartographicMode = MapCartographicMode.Aerial;
-                AerialButton.IsEnabled = false;
-            }
-            else if (sender == HybridButton)
-            {
-                MyMap.CartographicMode = MapCartographicMode.Hybrid;
-                HybridButton.IsEnabled = false;
-            }
-            else if (sender == TerrainButton)
-            {
-                // To enable terrain mode when color mode is dark
-                if (MyMap.ColorMode == MapColorMode.Dark)
-                {
-                    _isTemporarilyLight = true;
-                    MyMap.ColorMode = MapColorMode.Light;
-                }
-                MyMap.CartographicMode = MapCartographicMode.Terrain;
-                TerrainButton.IsEnabled = false;
-            }
-        }
+  
 
         /// <summary>
         /// Event handler for clicking travel mode buttons.
@@ -493,9 +424,6 @@ namespace MapExplorer
             AppBarDirectionsMenuItem.Text = AppResources.DirectionsOffMenuItemText;
             DirectionsTitleRowDefinition.Height = GridLength.Auto;
             DirectionsRowDefinition.Height = new GridLength(2, GridUnitType.Star);
-            ModePanel.Visibility = Visibility.Collapsed;
-            HeadingSlider.Visibility = Visibility.Collapsed;
-            PitchSlider.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -507,9 +435,6 @@ namespace MapExplorer
             AppBarDirectionsMenuItem.Text = AppResources.DirectionsOnMenuItemText;
             DirectionsTitleRowDefinition.Height = new GridLength(0);
             DirectionsRowDefinition.Height = new GridLength(0);
-            ModePanel.Visibility = Visibility.Visible;
-            HeadingSlider.Visibility = Visibility.Visible;
-            PitchSlider.Visibility = Visibility.Visible;
         }
 
         /// <summary>
