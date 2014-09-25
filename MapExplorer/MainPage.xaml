@@ -70,6 +70,9 @@
         <Slider x:Name="PitchSlider" Grid.RowSpan="4" Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="211" Width="45" Margin="0,0,12,82" Minimum="0" Maximum="70" Value="0" ValueChanged="PitchValueChanged"/>
         <Slider x:Name="HeadingSlider" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="80" Width="250" Margin="0,0,0,-20" Maximum="540" Minimum="180" Value="360" ValueChanged="HeadingValueChanged"/>
 
+        <TextBlock x:Name="ScaleText" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,30" Style="{StaticResource PhoneTextTitle3Style}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" FontWeight="SemiBold" Text="Test" Foreground="Blue"/>
+        <Rectangle x:Name="ScaleRectangle" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="8" Width="0" Margin="10,0,0,10" Fill="Blue" />
+        
         <!--Location panel is shown at application startup 
             asking for permission to location data.-->
         <Grid x:Name="LocationPanel" Margin="0,0,0,0" Grid.RowSpan="2" Background="#333333">

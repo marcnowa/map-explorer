@@ -26,6 +26,10 @@ using Microsoft.Phone.Maps.Services;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using MapExplorer.Resources;
+using Microsoft.Phone.Storage;
+using System.Threading.Tasks;
+using System.IO;
+using MapExplorer.Services;
 
 namespace MapExplorer
 {
@@ -52,10 +56,43 @@ namespace MapExplorer
                     LocationPanel.Visibility = Visibility.Collapsed;
                     BuildApplicationBar();
                     GetCurrentCoordinate();
+                    LoadTracks();
                 }
             }
 
             DrawMapMarkers();
+        }
+
+        private async void LoadTracks()
+        {
+            var parser = new GpxParser();
+
+            ExternalStorageDevice sdCard = (await ExternalStorage.GetExternalStorageDevicesAsync()).FirstOrDefault();
+            if (sdCard != null)
+            {
+                ExternalStorageFolder sdrootFolder = sdCard.RootFolder;
+                if (sdrootFolder != null)
+                {
+                    var files = await sdrootFolder.GetFilesAsync();
+                    foreach (ExternalStorageFile file in files)
+                    {
+                        string winRtPath = "D:\\" + file.Path;
+                        var segments = await Task.Run(() => parser.GetCoordinates(winRtPath));
+                        foreach (var segment in segments)
+                        {
+                            var line = new MapPolyline
+                            {
+                                StrokeColor = Colors.Red,
+                                StrokeThickness = 3,
+                                Path = segment,
+                            };
+                            MyMap.MapElements.Add(line);
+                        }
+
+
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -70,6 +107,8 @@ namespace MapExplorer
                 _isLocationAllowed = true;
                 SaveSettings();
                 GetCurrentCoordinate();
+
+                LoadTracks();
             }
         }
 
@@ -396,6 +435,52 @@ namespace MapExplorer
         /// </summary>
         private void ZoomLevelChanged(object sender, EventArgs e)
         {
+            //var coordinate1 = MyMap.ConvertViewportPointToGeoCoordinate(new Point(0, 0));
+            //var coordinate2 = MyMap.ConvertViewportPointToGeoCoordinate(new Point(MyMap.ActualWidth, 0));
+            //var widthDist = coordinate1.GetDistanceTo(coordinate2);
+
+            //var meters = Math.Pow(10, Math.Floor(Math.Log10(widthDist)));
+
+            //var scaleStart = MyMap.ConvertViewportPointToGeoCoordinate(new Point(10, 10));
+            //var scaleEnd = LocationCalculator.GetLocation(scaleStart, meters);
+
+            //if (Scale == null)
+            //{
+            //    Scale = new MapPolyline
+            //    {
+            //        StrokeColor = Colors.Black,
+            //        StrokeThickness = 15,
+            //    };
+            //    MyMap.MapElements.Add(Scale);
+            //}
+
+            //Scale.Path.Clear();
+            //Scale.Path.Add(scaleStart);
+            //Scale.Path.Add(scaleEnd);
+
+            
+            
+            double metersPerPixels = (Math.Cos(MyMap.Center.Latitude * Math.PI / 180) * 2 * Math.PI * 6378137) / (256 * Math.Pow(2, MyMap.ZoomLevel));
+            double kmLength = (double)1000 / metersPerPixels;
+
+            var scaleLength = 200 * metersPerPixels;
+
+            var unit = "m";
+            var format = "0";
+            if (scaleLength > 1000)
+            {
+                unit = "km";
+                scaleLength = scaleLength / 1000;
+
+                if (scaleLength < 10)
+                {
+                    format = "0.#";
+                }
+            }
+
+            ScaleRectangle.Width = 200;
+            ScaleText.Text = scaleLength.ToString(format) + unit;
+
             DrawMapMarkers();
         }
 
@@ -515,8 +600,8 @@ namespace MapExplorer
                 // Update route information and directions
                 DestinationText.Text = SearchTextBox.Text;
                 double distanceInKm = (double)MyRoute.LengthInMeters / 1000;
-                DestinationDetailsText.Text = distanceInKm.ToString("0.0") + " km, " 
-                                              + MyRoute.EstimatedDuration.Hours + " hrs " 
+                DestinationDetailsText.Text = distanceInKm.ToString("0.0") + " km, "
+                                              + MyRoute.EstimatedDuration.Hours + " hrs "
                                               + MyRoute.EstimatedDuration.Minutes + " mins.";
 
                 List<string> routeInstructions = new List<string>();
