@@ -45,21 +45,11 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1">
             <maps:Map x:Name="MyMap" ZoomLevelChanged="ZoomLevelChanged" Loaded="MyMap_Loaded" />
-            <TextBox x:Name="SearchTextBox" Visibility="Collapsed" InputScope="Maps" LostFocus="SearchTextBox_LostFocus" KeyDown="SearchTextBox_KeyDown" HorizontalAlignment="Left" Height="72" Margin="12,0,12,10" TextWrapping="Wrap" VerticalAlignment="Top" Width="456"/>
         </Grid>
+        
 
-        <!--Directions from current location to destination are shown in this panel.-->
-        <StackPanel x:Name="RouteDirections" Grid.Row="2" Margin="3,0,0,0">
-            <TextBlock x:Name="DestinationText" Style="{StaticResource PhoneTextTitle3Style}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" FontWeight="SemiBold"/>
-            <TextBlock x:Name="DestinationDetailsText" Style="{StaticResource PhoneTextNormalStyle}"/>
-        </StackPanel>
-        <Button x:Name="DriveButton" Content="Drive" IsEnabled="False" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,100,0" Click="TravelModeButton_Click"/>
-        <Button x:Name="WalkButton" Content="Walk" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,10,0" Click="TravelModeButton_Click"/>
-        <phone:LongListSelector x:Name="RouteLLS" Grid.Row="3" Margin="10,0,10,0" Background="Transparent" ItemTemplate="{StaticResource RouteListTemplate}" LayoutMode="List" 
-            IsGroupingEnabled="False" SelectionChanged="RouteManeuverSelected"/>
-
-        <TextBlock x:Name="ScaleText" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,30" Style="{StaticResource PhoneTextTitle3Style}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" FontWeight="SemiBold" Text="Test" Foreground="Blue"/>
-        <Rectangle x:Name="ScaleRectangle" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="8" Width="0" Margin="10,0,0,10" Fill="Blue" />
+        <TextBlock x:Name="ScaleText" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,30" Style="{StaticResource PhoneTextTitle3Style}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" FontWeight="SemiBold" Text="Test" Foreground="Black"/>
+        <Rectangle x:Name="ScaleRectangle" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="8" Width="0" Margin="10,0,0,10" Fill="Black" />
         
         <!--Location panel is shown at application startup 
             asking for permission to location data.-->
