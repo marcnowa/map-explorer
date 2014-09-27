@@ -24,6 +24,8 @@ using Microsoft.Phone.Maps.Controls;
 using System.Diagnostics;
 using System.Windows.Markup;
 using MapExplorer.Resources;
+using Windows.Devices.Geolocation;
+using System.Device.Location;
 
 namespace MapExplorer
 {
@@ -84,6 +86,7 @@ namespace MapExplorer
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            AppRunningInBackground = false;
         }
 
         // Code to execute when the application is deactivated (sent to background)
@@ -97,6 +100,16 @@ namespace MapExplorer
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
         }
+
+        public static GeoCoordinateWatcher Watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
+        public static bool AppRunningInBackground { get; set; }
+
+        private void Application_RunningInBackground(object sender, RunningInBackgroundEventArgs e)
+        {
+            AppRunningInBackground = true;
+        }
+
+        
 
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)

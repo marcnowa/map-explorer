@@ -54,12 +54,12 @@ namespace MapExplorer
             _line.StrokeThickness = 3;
             MyMap.MapElements.Add(_line);
 
-            _watcher.PositionChanged += Watcher_PositionChanged;
+            App.Watcher.PositionChanged += Watcher_PositionChanged;
 
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += Timer_Tick;
 
-            _watcher.Start();
+            App.Watcher.Start();
             _timer.Start();
             _startTime = System.Environment.TickCount;
 
@@ -72,11 +72,17 @@ namespace MapExplorer
             //timeLabel.Text = runTime.ToString(@"hh\:mm\:ss");
         }
 
+        protected override void OnRemovedFromJournal(System.Windows.Navigation.JournalEntryRemovedEventArgs e)
+        {
+            App.Watcher.PositionChanged -= Watcher_PositionChanged;
+            App.Watcher = null;
+        }
+
         private void Watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             var coord = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
 
-            if (_line.Path.Count > 0)
+            if (_line.Path.Any())
             {
                 var previousPoint = _line.Path.Last();
                 var distance = coord.GetDistanceTo(previousPoint);
@@ -104,10 +110,16 @@ namespace MapExplorer
                 MyMap.ZoomLevel = 15;
             }
 
-            _line.Path.Add(coord);
+            if (e.Position.Location.HorizontalAccuracy < 20)
+            {
+                _line.Path.Add(coord);
+            }
 
-            DrawCurrentPosition(coord);
-            //_previousPositionChangeTick = System.Environment.TickCount;
+
+            if (!App.AppRunningInBackground)
+            {
+                DrawCurrentPosition(coord);
+            }
         }
 
         private void DrawCurrentPosition(GeoCoordinate coord)
@@ -303,10 +315,6 @@ namespace MapExplorer
             ApplicationBar.IsMenuEnabled = true;
 
             // Create new buttons with the localized strings from AppResources.
-            ApplicationBarIconButton appBarSearchButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.feature.search.rest.png", UriKind.Relative));
-            appBarSearchButton.Text = AppResources.SearchMenuButtonText;
-            ApplicationBar.Buttons.Add(appBarSearchButton);
-
             ApplicationBarIconButton centerButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.locate.me.png", UriKind.Relative));
             centerButton.Text = AppResources.LocateMeMenuButtonText;
             centerButton.Click += centerButton_Click;
@@ -314,9 +322,6 @@ namespace MapExplorer
 
 
             // Create new menu items with the localized strings from AppResources.
-            AppBarColorModeMenuItem = new ApplicationBarMenuItem(AppResources.ColorModeDarkMenuItemText);
-            ApplicationBar.MenuItems.Add(AppBarColorModeMenuItem);
-
             AppBarAboutMenuItem = new ApplicationBarMenuItem(AppResources.AboutMenuItemText);
             AppBarAboutMenuItem.Click += new EventHandler(About_Click);
             ApplicationBar.MenuItems.Add(AppBarAboutMenuItem);
@@ -407,7 +412,7 @@ namespace MapExplorer
         private IsolatedStorageSettings Settings;
 
 
-        private GeoCoordinateWatcher _watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
+        
         private MapPolyline _line;
         private DispatcherTimer _timer = new DispatcherTimer();
         private long _startTime;
