@@ -61,6 +61,7 @@ namespace MapExplorer
 
             App.Watcher.Start();
             _timer.Start();
+         
             _startTime = System.Environment.TickCount;
 
             PhoneApplicationService.Current.ApplicationIdleDetectionMode = IdleDetectionMode.Disabled;
@@ -255,6 +256,25 @@ namespace MapExplorer
         }
 
 
+        void startButton_Click(object sender, EventArgs e)
+        {
+            var button = sender as ApplicationBarIconButton;
+
+            if (_timer.IsEnabled)
+            {
+                button.Text = "Resume";
+                App.Watcher.Stop();
+                _timer.Stop();
+            }
+            else
+            {
+                button.Text = "Pause";
+                App.Watcher.Start();
+                _timer.Start();
+            }
+        }
+
+
         /// <summary>
         /// Event handler for map zoom level value change.
         /// Drawing accuracy radius has dependency on map zoom level.
@@ -288,19 +308,18 @@ namespace MapExplorer
             ScaleText.Text = scaleLength.ToString(format) + unit;
         }
 
- 
 
 
 
-       
-       
 
 
-     
-      
 
-     
 
+
+
+
+
+    
         /// <summary>
         /// Helper method to build a localized ApplicationBar
         /// </summary>
@@ -320,12 +339,18 @@ namespace MapExplorer
             centerButton.Click += centerButton_Click;
             ApplicationBar.Buttons.Add(centerButton);
 
+            ApplicationBarIconButton startButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.locate.me.png", UriKind.Relative));
+            startButton.Text = "Pause";
+            startButton.Click += startButton_Click;
+            ApplicationBar.Buttons.Add(startButton);
+
 
             // Create new menu items with the localized strings from AppResources.
             AppBarAboutMenuItem = new ApplicationBarMenuItem(AppResources.AboutMenuItemText);
             AppBarAboutMenuItem.Click += new EventHandler(About_Click);
             ApplicationBar.MenuItems.Add(AppBarAboutMenuItem);
         }
+
 
       
 
