@@ -48,7 +48,6 @@ namespace MapExplorer.Services
         private async Task WriteToFile(string contents)
         {
             StorageFolder SDDevice = Windows.Storage.KnownFolders.RemovableDevices;
-            //var folder = await SDDevice.GetFolderAsync("Tracks\\Autosave");
             StorageFolder sdCard = (await SDDevice.GetFoldersAsync()).FirstOrDefault();
             var name = String.Format("Autosave{0}.gpx", Guid.NewGuid().ToString());
             var file = await sdCard.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
@@ -58,20 +57,7 @@ namespace MapExplorer.Services
                 byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(contents.ToCharArray());
                 textStream.Write(fileBytes, 0, fileBytes.Length);
                 textStream.Flush();
-                //using (DataWriter textWriter = new DataWriter(textStream))
-                //{
-                //    textWriter.WriteString(contents);
-                //    await textWriter.StoreAsync();
-                //}
             }
-
-            //byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(contents.ToCharArray());
-
-            //using (var s = await file.OpenStreamForWriteAsync())
-            //{
-            //    s.Write(fileBytes, 0, fileBytes.Length);
-            //    s.Flush();
-            //}
         }
     }
 }

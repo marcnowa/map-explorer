@@ -179,8 +179,6 @@ namespace MapExplorer
             ExternalStorageDevice sdCard = (await ExternalStorage.GetExternalStorageDevicesAsync()).FirstOrDefault();
             if (sdCard != null)
             {
-                //ExternalStorageFolder sdrootFolder = sdCard.RootFolder;
-
                 var folder = await sdCard.GetFolderAsync("D:\\Tracks\\");
                 if (folder != null)
                 {
