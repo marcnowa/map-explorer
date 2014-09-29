@@ -1,51 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-
-  <Identity Name="e3927091-8f80-439c-90b5-2b580a3f07fa"
-            Publisher="CN=IEUser"
-            Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="4b41883b-a376-492b-8d41-5f8e0089ef47" PhonePublisherId="73a7bfc3-acbc-4b07-9245-82631fa85e7e"/>
-
+  <Identity Name="e3927091-8f80-439c-90b5-2b580a3f07fa" Publisher="CN=IEUser" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="4b41883b-a376-492b-8d41-5f8e0089ef47" PhonePublisherId="73a7bfc3-acbc-4b07-9245-82631fa85e7e" />
   <Properties>
     <DisplayName>MapExplorer</DisplayName>
     <PublisherDisplayName>IEUser</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.3.1</OSMinVersion>
     <OSMaxVersionTested>6.3.1</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="x4b41883bya376y492by8d41y5f8e0089ef47x"
-        Executable="AGHost.exe"
-        EntryPoint="MainPage.xaml">
-      <m3:VisualElements
-          DisplayName="MapExplorer"
-          Square150x150Logo="Assets\SquareTile150x150.png"
-          Square44x44Logo="Assets\Logo.png"
-          Description="MapExplorer"
-          ForegroundText="light"
-          BackgroundColor="#464646">
-        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png"/>
+    <Application Id="x4b41883bya376y492by8d41y5f8e0089ef47x" Executable="AGHost.exe" EntryPoint="MainPage.xaml">
+      <m3:VisualElements DisplayName="MapExplorer" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png" Description="MapExplorer" ForegroundText="light" BackgroundColor="#464646">
+        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png">
+        </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\Splashscreen.png" />
       </m3:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="AgHost.BackgroundTask">
           <BackgroundTasks>
-          <Task Type="systemEvent" />
+            <Task Type="systemEvent" />
           </BackgroundTasks>
+        </Extension>
+        <Extension Category="windows.fileTypeAssociation">
+          <FileTypeAssociation Name=".gpx">
+            <DisplayName>gpx</DisplayName>
+            <SupportedFileTypes>
+              <FileType ContentType="application/gpx">.gpx</FileType>
+            </SupportedFileTypes>
+          </FileTypeAssociation>
+        </Extension>
+        <Extension Category="windows.fileSavePicker">
+          <FileSavePicker>
+            <SupportedFileTypes>
+              <FileType>.gpx</FileType>
+            </SupportedFileTypes>
+          </FileSavePicker>
+        </Extension>
+        <Extension Category="windows.fileOpenPicker">
+          <FileOpenPicker>
+            <SupportedFileTypes>
+              <FileType>.gpx</FileType>
+            </SupportedFileTypes>
+          </FileOpenPicker>
         </Extension>
       </Extensions>
     </Application>
   </Applications>
   <Capabilities>
+    <Capability Name="removableStorage" />
+    <Capability Name="musicLibrary" />
+    <Capability Name="videosLibrary" />
+    <Capability Name="picturesLibrary" />
+    <Capability Name="internetClientServer" />
   </Capabilities>
   <Extensions>
     <Extension Category="windows.activatableClass.inProcessServer">

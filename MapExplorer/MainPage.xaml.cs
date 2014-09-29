@@ -61,7 +61,7 @@ namespace MapExplorer
 
             App.Watcher.Start();
             _timer.Start();
-         
+
             _startTime = System.Environment.TickCount;
 
             PhoneApplicationService.Current.ApplicationIdleDetectionMode = IdleDetectionMode.Disabled;
@@ -145,12 +145,12 @@ namespace MapExplorer
             ellipse.Height = 30;
             ellipse.Width = 30;
             ellipse.Fill = new SolidColorBrush(color);
-            
+
             // Create a MapOverlay and add marker.
             MapOverlay overlay = new MapOverlay();
             overlay.Content = ellipse;
             overlay.GeoCoordinate = new GeoCoordinate(coordinate.Latitude, coordinate.Longitude);
-            overlay.PositionOrigin = new Point(0.0, 0.0);
+            overlay.PositionOrigin = new Point(0.5, 0.5);
             mapLayer.Add(overlay);
         }
 
@@ -179,10 +179,12 @@ namespace MapExplorer
             ExternalStorageDevice sdCard = (await ExternalStorage.GetExternalStorageDevicesAsync()).FirstOrDefault();
             if (sdCard != null)
             {
-                ExternalStorageFolder sdrootFolder = sdCard.RootFolder;
-                if (sdrootFolder != null)
+                //ExternalStorageFolder sdrootFolder = sdCard.RootFolder;
+
+                var folder = await sdCard.GetFolderAsync("D:\\Tracks\\");
+                if (folder != null)
                 {
-                    var files = await sdrootFolder.GetFilesAsync();
+                    var files = await folder.GetFilesAsync();
                     foreach (ExternalStorageFile file in files)
                     {
                         string winRtPath = "D:\\" + file.Path;
@@ -234,7 +236,7 @@ namespace MapExplorer
             Microsoft.Phone.Maps.MapsSettings.ApplicationContext.AuthenticationToken = "__AuthenticationToken__";
         }
 
-    
+
 
 
         /// <summary>
@@ -319,7 +321,7 @@ namespace MapExplorer
 
 
 
-    
+
         /// <summary>
         /// Helper method to build a localized ApplicationBar
         /// </summary>
@@ -344,6 +346,11 @@ namespace MapExplorer
             startButton.Click += startButton_Click;
             ApplicationBar.Buttons.Add(startButton);
 
+            ApplicationBarIconButton saveButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.locate.me.png", UriKind.Relative));
+            saveButton.Text = "Save";
+            saveButton.Click += saveButton_Click;
+            ApplicationBar.Buttons.Add(saveButton);
+
 
             // Create new menu items with the localized strings from AppResources.
             AppBarAboutMenuItem = new ApplicationBarMenuItem(AppResources.AboutMenuItemText);
@@ -351,8 +358,24 @@ namespace MapExplorer
             ApplicationBar.MenuItems.Add(AppBarAboutMenuItem);
         }
 
+        void saveButton_Click(object sender, EventArgs e)
+        {
+            var creator = new GpxCreator();
+            var task = creator.CreateGpxFile(_line.Path);
 
-      
+            task.ContinueWith(async (c) =>
+            {
+                var successful = await c;
+                var message = successful ? "File created successfully" : "There was an error creating the file.";
+                Dispatcher.BeginInvoke(() =>
+                {
+                    MessageBox.Show(message);
+                });
+            });
+        }
+
+
+
 
         /// <summary>
         /// Helper method to show progress indicator in system tray
@@ -437,7 +460,7 @@ namespace MapExplorer
         private IsolatedStorageSettings Settings;
 
 
-        
+
         private MapPolyline _line;
         private DispatcherTimer _timer = new DispatcherTimer();
         private long _startTime;

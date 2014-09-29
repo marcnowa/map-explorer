@@ -113,6 +113,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\GpxCreator.cs" />
     <Compile Include="Services\GpxParser.cs" />
   </ItemGroup>
   <ItemGroup>
