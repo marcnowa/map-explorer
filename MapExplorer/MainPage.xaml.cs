@@ -111,7 +111,7 @@ namespace MapExplorer
                 MyMap.ZoomLevel = 15;
             }
 
-            if (e.Position.Location.HorizontalAccuracy < 20)
+            if (e.Position.Location.HorizontalAccuracy < 100)
             {
                 _line.Path.Add(coord);
             }
@@ -195,7 +195,7 @@ namespace MapExplorer
                                 StrokeThickness = 3,
                                 Path = segment,
                             };
-                            MyMap.MapElements.Add(line);
+                            MyMap.MapElements.Insert(0, line);
                         }
                     }
                 }
@@ -431,7 +431,6 @@ namespace MapExplorer
         }
 
         // Application bar menu items
-        private ApplicationBarMenuItem AppBarColorModeMenuItem = null;
         private ApplicationBarMenuItem AppBarAboutMenuItem = null;
 
         // Progress indicator shown in system tray
