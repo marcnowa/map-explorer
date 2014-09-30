@@ -262,12 +262,14 @@ namespace MapExplorer
 
             if (_timer.IsEnabled)
             {
+                button.IconUri = new Uri("/Assets/appbar.start.png", UriKind.Relative);
                 button.Text = "Resume";
                 App.Watcher.Stop();
                 _timer.Stop();
             }
             else
             {
+                button.IconUri = new Uri("/Assets/appbar.pause.png", UriKind.Relative);
                 button.Text = "Pause";
                 App.Watcher.Start();
                 _timer.Start();
@@ -339,12 +341,12 @@ namespace MapExplorer
             centerButton.Click += centerButton_Click;
             ApplicationBar.Buttons.Add(centerButton);
 
-            ApplicationBarIconButton startButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.locate.me.png", UriKind.Relative));
+            ApplicationBarIconButton startButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.pause.png", UriKind.Relative));
             startButton.Text = "Pause";
             startButton.Click += startButton_Click;
             ApplicationBar.Buttons.Add(startButton);
 
-            ApplicationBarIconButton saveButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.locate.me.png", UriKind.Relative));
+            ApplicationBarIconButton saveButton = new ApplicationBarIconButton(new Uri("/Assets/appbar.save.png", UriKind.Relative));
             saveButton.Text = "Save";
             saveButton.Click += saveButton_Click;
             ApplicationBar.Buttons.Add(saveButton);
