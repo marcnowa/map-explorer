@@ -195,10 +195,16 @@ namespace MapExplorer
                                 StrokeThickness = 3,
                                 Path = segment,
                             };
-                            MyMap.MapElements.Insert(0, line);
+                            MyMap.MapElements.Add(line);
                         }
                     }
                 }
+            }
+
+            if (_line != null)
+            {
+                MyMap.MapElements.Remove(_line);
+                MyMap.MapElements.Add(_line);
             }
         }
 
