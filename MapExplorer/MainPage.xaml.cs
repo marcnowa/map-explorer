@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.IO;
 using MapExplorer.Services;
 using System.Windows.Threading;
+using MapExplorer.Model;
 
 namespace MapExplorer
 {
@@ -172,6 +173,8 @@ namespace MapExplorer
             }
         }
 
+        private List<Track> _tracks = new List<Track>();
+
         private async void LoadTracks()
         {
             var parser = new GpxParser();
@@ -185,6 +188,7 @@ namespace MapExplorer
                     var files = await folder.GetFilesAsync();
                     foreach (ExternalStorageFile file in files)
                     {
+                        var track = new Track { Name = file.Name };
                         string winRtPath = "D:\\" + file.Path;
                         var segments = await Task.Run(() => parser.GetCoordinates(winRtPath));
                         foreach (var segment in segments)
@@ -196,7 +200,9 @@ namespace MapExplorer
                                 Path = segment,
                             };
                             MyMap.MapElements.Add(line);
+                            track.Segments.Add(line);
                         }
+                        _tracks.Add(track);
                     }
                 }
             }
@@ -206,6 +212,8 @@ namespace MapExplorer
                 MyMap.MapElements.Remove(_line);
                 MyMap.MapElements.Add(_line);
             }
+
+            AppBarHighlightMenuItem.IsEnabled = true;
         }
 
         /// <summary>
@@ -316,18 +324,6 @@ namespace MapExplorer
             ScaleText.Text = scaleLength.ToString(format) + unit;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Helper method to build a localized ApplicationBar
         /// </summary>
@@ -362,6 +358,49 @@ namespace MapExplorer
             AppBarAboutMenuItem = new ApplicationBarMenuItem(AppResources.AboutMenuItemText);
             AppBarAboutMenuItem.Click += new EventHandler(About_Click);
             ApplicationBar.MenuItems.Add(AppBarAboutMenuItem);
+
+            AppBarHighlightMenuItem = new ApplicationBarMenuItem("Highlight");
+            AppBarHighlightMenuItem.Click += highlightMenuItem_Click;
+            AppBarHighlightMenuItem.IsEnabled = false;
+            ApplicationBar.MenuItems.Add(AppBarHighlightMenuItem);
+        }
+
+        void highlightMenuItem_Click(object sender, EventArgs e)
+        {
+            tracksSelector.ItemsSource = _tracks;
+            tracksSelector.Visibility = System.Windows.Visibility.Visible;
+            tracksSelector.SelectionChanged += tracksSelector_SelectionChanged;
+        }
+
+        private Track _highlightedTrack;
+
+        void tracksSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tracksSelector.Visibility = System.Windows.Visibility.Collapsed;
+            var selectedTrack = tracksSelector.SelectedItem as Track;
+            if (selectedTrack != null)
+            {
+                if (_highlightedTrack != null)
+                {
+                    foreach (var segment in _highlightedTrack.Segments)
+                    {
+                        segment.StrokeColor = Colors.Red;
+                    }
+                }
+                _highlightedTrack = selectedTrack;
+                foreach (var segment in selectedTrack.Segments)
+                {
+                    segment.StrokeColor = Colors.Blue;
+                    MyMap.MapElements.Remove(segment);
+                    MyMap.MapElements.Add(segment);
+                }
+
+                if (_line != null)
+                {
+                    MyMap.MapElements.Remove(_line);
+                    MyMap.MapElements.Add(_line);
+                }
+            }
         }
 
         void saveButton_Click(object sender, EventArgs e)
@@ -440,6 +479,7 @@ namespace MapExplorer
 
         // Application bar menu items
         private ApplicationBarMenuItem AppBarAboutMenuItem = null;
+        private ApplicationBarMenuItem AppBarHighlightMenuItem = null;
 
         // Progress indicator shown in system tray
         private ProgressIndicator ProgressIndicator = null;

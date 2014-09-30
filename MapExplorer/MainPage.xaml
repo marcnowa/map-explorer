@@ -47,7 +47,15 @@
 
         <TextBlock x:Name="ScaleText" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,30" Style="{StaticResource PhoneTextTitle3Style}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" FontWeight="SemiBold" Text="Test" Foreground="Black"/>
         <Rectangle x:Name="ScaleRectangle" Grid.RowSpan="4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="8" Width="0" Margin="10,0,0,10" Fill="Black" />
-        
+
+        <phone:LongListSelector Name="tracksSelector" Visibility="Collapsed">
+            <phone:LongListSelector.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" FontSize="36"/>
+                </DataTemplate>
+            </phone:LongListSelector.ItemTemplate>
+        </phone:LongListSelector>
+
         <!--Location panel is shown at application startup 
             asking for permission to location data.-->
         <Grid x:Name="LocationPanel" Margin="0,0,0,0" Grid.RowSpan="2" Background="#333333">
